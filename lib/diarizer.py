@@ -9,6 +9,7 @@ from whisperx.diarize import DiarizationPipeline, assign_word_speakers
 
 class Diarizer:
     def __init__(self, model: str = "medium.en", device: str = "cuda", log_level: str = "INFO"):
+        self.huggingface_token = os.environ["HUGGINGFACE_TOKEN"]
         self.model = model
         self.device = device
         self.logger = logging.getLogger(__name__)
@@ -32,7 +33,7 @@ class Diarizer:
 
     def diarize(self, audio_file: str) -> Dict[str, Any]:
         self.logger.info("Diarizing")
-        pipeline = DiarizationPipeline(use_auth_token=os.environ["HUGGINGFACE_TOKEN"], device=self.device)
+        pipeline = DiarizationPipeline(use_auth_token=self.huggingface_token, device=self.device)
         return pipeline(audio_file)
 
     def assign_speakers(
